@@ -26,6 +26,19 @@
             margin-top: 20px;
             font-size: 16px;
         }
+        #progressBar {
+            width: 100%;
+            background: #444;
+            margin-top: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #progressBar div {
+            height: 20px;
+            width: 0%;
+            background: #e0b040;
+            transition: width 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -33,6 +46,7 @@
     <p>Click the button to fetch 50 luxury images!</p>
     <button id="downloadBtn">Download Images</button>
     <div id="statusContainer">Ready to download...</div>
+    <div id="progressBar"><div></div></div>
 
     <script>
         const accessKey = "KmAl00U7hxyRuHW5mBmMh-rbbRK0hPp-lZwfBJ6xrMk";
@@ -63,6 +77,7 @@
 
         document.getElementById('downloadBtn').addEventListener('click', () => {
             document.getElementById('statusContainer').innerText = "Starting download...";
+            document.querySelector('#progressBar div').style.width = '0%';
             fetchImages();
         });
 
@@ -85,6 +100,8 @@
                         link.click();
 
                         downloaded++;
+                        const progressPercent = (downloaded / numImages) * 100;
+                        document.querySelector('#progressBar div').style.width = `${progressPercent}%`;
                         document.getElementById('statusContainer').innerText = `Downloaded ${downloaded} of ${numImages}`;
                     }
                 } catch (error) {
