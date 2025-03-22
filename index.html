@@ -22,21 +22,17 @@
             cursor: pointer;
             font-size: 18px;
         }
-        #imageContainer {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+        #statusContainer {
             margin-top: 20px;
+            font-size: 16px;
         }
-        img { width: 150px; height: auto; border-radius: 10px; }
     </style>
 </head>
 <body>
     <h1>Luxury Image Downloader</h1>
     <p>Click the button to fetch 50 luxury images!</p>
     <button id="downloadBtn">Download Images</button>
-    <div id="imageContainer"></div>
+    <div id="statusContainer">Ready to download...</div>
 
     <script>
         const accessKey = "KmAl00U7hxyRuHW5mBmMh-rbbRK0hPp-lZwfBJ6xrMk";
@@ -45,18 +41,33 @@
             "bugatti", "rolls-royce", "bmw-m", "audi-rs", "mercedes-amg",
             "rolex", "patek philippe", "audemars piguet", "richard mille",
             "luxury-villas", "modern-mansion", "private-jet", "yacht", "superyacht",
-            "luxury-watch", "luxury-interior", "exotic-car", "sports-car"
+            "luxury-watch", "luxury-interior", "exotic-car", "sports-car",
+            "ducati", "harley-davidson", "mclaren", "aston-martin", "pagani",
+            "koenigsegg", "bentley", "maserati", "jaguar-f-type", "corvette",
+            "camaro", "mustang-shelby", "g-wagon", "tesla-roadster", "lotus",
+            "hummer-ev", "cadillac-escalade", "lexus-lfa", "porsche-911", "r8",
+            "ford-gt", "range-rover-sport", "lambo-urus", "bmw-i8", "f1-car",
+            "private-helicopter", "gulfstream-jet", "cessna", "falcon-jet",
+            "mega-yacht", "luxury-cruise", "sailing-yacht", "supercar",
+            "custom-bike", "yamaha-r1", "kawasaki-ninja", "aprilia-rsv4",
+            "mv-agusta", "triumph-speed-triple", "bugatti-chiron", "laferrari",
+            "zenvo", "w-motors-lykan", "genesis-gv80", "maybach", "alfa-romeo",
+            "morgan-aero", "rolls-royce-phantom", "brabus", "mansory",
+            "luxury-penthouse", "high-end-apartment", "luxury-beach-house",
+            "exclusive-resort", "private-island", "luxury-suv", "sports-yacht",
+            "custom-rolls-royce", "bmw-m4-cs", "audi-r8-v10", "pagani-huayra",
+            "hypercar", "superbike-race", "offshore-yacht", "custom-mercedes"
         ];
 
         const numImages = 50;
 
         document.getElementById('downloadBtn').addEventListener('click', () => {
-            document.getElementById('imageContainer').innerHTML = "Fetching images...";
+            document.getElementById('statusContainer').innerText = "Starting download...";
             fetchImages();
         });
 
         async function fetchImages() {
-            document.getElementById('imageContainer').innerHTML = "";
+            let downloaded = 0;
             for (let i = 0; i < numImages; i++) {
                 const category = categories[i % categories.length];
                 const url = `https://api.unsplash.com/photos/random?query=${category}&client_id=${accessKey}`;
@@ -67,20 +78,22 @@
                         const data = await response.json();
                         const imageUrl = data.urls.regular;
 
-                        const imgElement = document.createElement('img');
-                        imgElement.src = imageUrl;
-                        document.getElementById('imageContainer').appendChild(imgElement);
-
                         // Trigger download
                         const link = document.createElement('a');
                         link.href = imageUrl;
                         link.download = `luxury_${i + 1}.jpg`;
                         link.click();
+
+                        downloaded++;
+                        document.getElementById('statusContainer').innerText = `Downloaded ${downloaded} of ${numImages}`;
                     }
                 } catch (error) {
                     console.error('Error fetching image:', error);
+                    document.getElementById('statusContainer').innerText = "Failed to fetch some images. Check console.";
                 }
             }
+
+            document.getElementById('statusContainer').innerText += "\nDownload completed! Check your Downloads folder.";
         }
     </script>
 </body>
